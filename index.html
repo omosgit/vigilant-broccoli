@@ -84,7 +84,6 @@
 
   .card { background: var(--bg1); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 20px; }
 
-  /* Buttons */
   .btn {
     background: transparent;
     border: 1px solid var(--border);
@@ -115,14 +114,15 @@
   .btn.amber:hover  { background: var(--c-break-bg); }
   .btn.session-start { background: rgba(22,163,74,0.1); border-color: rgba(22,163,74,0.45); color: var(--c-continue); font-weight: 500; }
   .btn.session-start:hover { background: rgba(22,163,74,0.18); }
-  .btn.session-stop  { background: rgba(220,38,38,0.1); border-color: rgba(220,38,38,0.45); color: var(--c-cancel);   font-weight: 500; }
+  .btn.session-stop  { background: rgba(220,38,38,0.1); border-color: rgba(220,38,38,0.45); color: var(--c-cancel); font-weight: 500; }
   .btn.session-stop:hover  { background: rgba(220,38,38,0.18); }
   .btn.start-project { background: rgba(22,163,74,0.12); border-color: rgba(22,163,74,0.5); color: var(--c-continue); font-size: 14px; padding: 10px 28px; font-weight: 500; }
   .btn.start-project:hover { background: rgba(22,163,74,0.2); }
+  .btn.save { background: rgba(22,163,74,0.1); border-color: rgba(22,163,74,0.4); color: var(--c-continue); padding: 6px 14px; font-size: 12px; }
+  .btn.cancel-edit { padding: 6px 14px; font-size: 12px; }
 
   .outcome-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 
-  /* Project panel + gate */
   .project-panel { position: relative; background: var(--bg1); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 20px; overflow: hidden; }
   .project-inner { padding: 16px 18px; }
   .project-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
@@ -161,7 +161,6 @@
   }
   .gate-label { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
 
-  /* Break bar */
   .break-bar {
     display: none;
     align-items: center;
@@ -175,16 +174,16 @@
     color: var(--c-break);
   }
 
-  /* Timeline */
   .tl-legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); font-family: 'DM Mono', monospace; }
   .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 
-  /* Log table */
   .log-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
   .log-table th { text-align: left; font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); padding: 0 8px 10px 0; border-bottom: 1px solid var(--border); font-weight: 400; }
   .log-table td { padding: 9px 8px 9px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
-  .log-table tr:last-child td { border-bottom: none; }
+  .log-table tr.edit-row td { padding: 0 0 10px 0; border-bottom: 1px solid var(--border); }
+  .log-table tbody tr:last-child td { border-bottom: none; }
+  .log-table tbody tr:last-child.edit-row + tr { display: none; }
   .mono { font-family: 'DM Mono', monospace; }
   .muted { color: var(--text-muted); }
   .secondary { color: var(--text-secondary); }
@@ -196,7 +195,14 @@
   .b-cancel   { background: var(--c-cancel-bg);   color: var(--c-cancel); }
   .b-va       { background: var(--c-va-bg);        color: var(--c-va); }
 
-  /* Owner cards */
+  .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 2px 4px; font-size: 15px; border-radius: 4px; transition: color 0.15s; line-height: 1; }
+  .icon-btn:hover.del  { color: var(--c-cancel); }
+  .icon-btn:hover.edit { color: var(--accent); }
+
+  .edit-panel { background: var(--bg2); border-radius: var(--radius); padding: 12px 14px; }
+  .edit-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .edit-actions { display: flex; gap: 8px; margin-top: 10px; }
+
   .owners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
   .owner-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
   .owner-header { display: flex; align-items: center; gap: 10px; }
@@ -217,15 +223,12 @@
 
   .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 13px; }
   .export-row { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
-  .del-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0; font-size: 18px; line-height: 1; transition: color 0.15s; }
-  .del-btn:hover { color: var(--c-cancel); }
 
   @media (max-width: 600px) {
     body { padding: 16px; }
     .stat-row { grid-template-columns: repeat(2, 1fr); }
-    .project-fields { grid-template-columns: 1fr; }
+    .project-fields, .edit-fields { grid-template-columns: 1fr; }
     .outcome-btns { flex-direction: column; }
-    .top-bar { gap: 8px; }
   }
 
   ::-webkit-scrollbar { width: 6px; }
@@ -310,13 +313,13 @@
     <table class="log-table" id="logTable" style="display:none;">
       <thead><tr>
         <th style="width:3%">#</th>
-        <th style="width:20%">Project</th>
-        <th style="width:13%">Owner</th>
+        <th style="width:19%">Project</th>
+        <th style="width:12%">Owner</th>
         <th style="width:7%">Start</th>
         <th style="width:7%">Dur</th>
-        <th style="width:16%">Outcome</th>
+        <th style="width:14%">Outcome</th>
         <th>Notes</th>
-        <th style="width:3%"></th>
+        <th style="width:6%"></th>
       </tr></thead>
       <tbody id="logBody"></tbody>
     </table>
@@ -333,6 +336,7 @@
   let projects = [], breaks = [];
   let breakStart = null, totalBreak = 0, onBreak = false;
   let projStartWallTime = null;
+  let editingId = null;
 
   const OUTCOMES = ['Continue Project','Vision Agreed Approval','Cancel Project'];
   const COLORS = {
@@ -365,9 +369,7 @@
     document.getElementById('sessionElapsed').textContent=fmtHMS(Date.now()-sessionStart);
     document.getElementById('breakTime').textContent=fmtMM(totalBreak+(onBreak?Date.now()-breakStart:0));
     document.getElementById('projCount').textContent=projects.length;
-    if(projects.length){
-      document.getElementById('avgTime').textContent=fmtMM(projects.reduce((a,p)=>a+p.durationMs,0)/projects.length);
-    }
+    if(projects.length) document.getElementById('avgTime').textContent=fmtMM(projects.reduce((a,p)=>a+p.durationMs,0)/projects.length);
   },1000);
 
   setInterval(()=>{
@@ -392,30 +394,23 @@
   }
 
   function showGateStopped(){
-    let g=document.getElementById('projectGate');
-    g.style.display='flex';
+    document.getElementById('projectGate').style.display='flex';
     document.getElementById('gateLabel').textContent='Session stopped';
     document.getElementById('startProjBtn').style.display='none';
     setOutcomes(false);
   }
-
   function showGateReady(){
-    let g=document.getElementById('projectGate');
-    g.style.display='flex';
+    document.getElementById('projectGate').style.display='flex';
     document.getElementById('gateLabel').textContent='Ready for next project';
     document.getElementById('startProjBtn').style.display='inline-flex';
     setOutcomes(false);
   }
-
   function hideGate(){
     document.getElementById('projectGate').style.display='none';
     setOutcomes(true);
     document.getElementById('projStatus').textContent='timer running';
   }
-
-  function setOutcomes(on){
-    document.querySelectorAll('#outcomeBtns button').forEach(b=>b.disabled=!on);
-  }
+  function setOutcomes(on){document.querySelectorAll('#outcomeBtns button').forEach(b=>b.disabled=!on);}
 
   function startProject(){
     if(!sessionRunning)return;
@@ -440,7 +435,7 @@
       onBreak=false;
       document.getElementById('breakBar').style.display='none';
       document.getElementById('breakBtn').innerHTML='&#9749; Break';
-      if(projElapsed>0 && document.getElementById('projectGate').style.display==='none'){
+      if(projElapsed>0&&document.getElementById('projectGate').style.display==='none'){
         projTimerStart=Date.now(); projRunning=true;
         document.getElementById('projStatus').textContent='timer running';
       }
@@ -449,7 +444,7 @@
   }
 
   function logProject(outcome){
-    if(!projRunning && projElapsed===0)return;
+    if(!projRunning&&projElapsed===0)return;
     let name=document.getElementById('projName').value.trim()||'(unnamed)';
     let dur=projRunning?projElapsed+(Date.now()-projTimerStart):projElapsed;
     let owner=document.getElementById('ownerName').value.trim()||'—';
@@ -465,8 +460,24 @@
   }
 
   function deleteProject(id){
+    if(editingId===id) editingId=null;
     projects=projects.filter(p=>p.id!==id);
     projects.forEach((p,i)=>p.index=i+1);
+    renderAll();
+  }
+
+  function toggleEdit(id){
+    editingId=(editingId===id)?null:id;
+    renderLog();
+  }
+
+  function saveEdit(id){
+    let p=projects.find(p=>p.id===id);
+    if(!p)return;
+    p.name=document.getElementById('ename-'+id).value.trim()||p.name;
+    p.owner=document.getElementById('eowner-'+id).value.trim()||p.owner;
+    p.notes=document.getElementById('enotes-'+id).value;
+    editingId=null;
     renderAll();
   }
 
@@ -474,11 +485,14 @@
 
   function renderLog(){
     let empty=document.getElementById('emptyState'),table=document.getElementById('logTable');
-    if(!projects.length){empty.style.display='block';table.style.display='none';return;}
+    if(!projects.length){empty.style.display='block';table.style.display='none';editingId=null;return;}
     empty.style.display='none'; table.style.display='table';
-    let bc={'Continue Project':'b-continue','Cancel Project':'b-cancel','Vision Agreed Approval':'b-va'};
-    document.getElementById('logBody').innerHTML=projects.map(p=>`
-      <tr>
+    const bc={'Continue Project':'b-continue','Cancel Project':'b-cancel','Vision Agreed Approval':'b-va'};
+    let html='';
+    projects.forEach((p,i)=>{
+      let isEditing=editingId===p.id;
+      let isLast=i===projects.length-1;
+      html+=`<tr>
         <td class="mono muted">${p.index}</td>
         <td class="bold">${esc(p.name)}</td>
         <td class="secondary">${esc(p.owner)}</td>
@@ -486,8 +500,31 @@
         <td class="mono">${fmtMM(p.durationMs)}</td>
         <td><span class="badge ${bc[p.outcome]}">${p.outcome}</span></td>
         <td class="notes-cell">${esc(p.notes)}</td>
-        <td><button class="del-btn" onclick="deleteProject(${p.id})" aria-label="Delete">&times;</button></td>
-      </tr>`).join('');
+        <td style="white-space:nowrap;">
+          <button class="icon-btn edit" onclick="toggleEdit(${p.id})" title="Edit" aria-label="Edit">${isEditing?'&#8963;':'&#9998;'}</button>
+          <button class="icon-btn del"  onclick="deleteProject(${p.id})" title="Delete" aria-label="Delete">&times;</button>
+        </td>
+      </tr>`;
+      if(isEditing){
+        html+=`<tr class="edit-row" style="${isLast?'':''}">
+          <td colspan="8" style="padding:0 0 12px 0;border-bottom:1px solid var(--border);">
+            <div class="edit-panel">
+              <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Edit project</div>
+              <div class="edit-fields">
+                <input class="field-input" id="ename-${p.id}" value="${esc(p.name)}" placeholder="Project name">
+                <input class="field-input" id="eowner-${p.id}" value="${esc(p.owner)}" placeholder="Owner">
+              </div>
+              <textarea class="field-input" id="enotes-${p.id}" rows="4" style="min-height:80px;">${esc(p.notes)}</textarea>
+              <div class="edit-actions">
+                <button class="btn save" onclick="saveEdit(${p.id})">&#10003; Save changes</button>
+                <button class="btn cancel-edit" onclick="toggleEdit(${p.id})">Cancel</button>
+              </div>
+            </div>
+          </td>
+        </tr>`;
+      }
+    });
+    document.getElementById('logBody').innerHTML=html;
   }
 
   function renderTimeline(){
@@ -507,7 +544,7 @@
       bars+=`<line x1="${x+w}" y1="${trackY}" x2="${x+w}" y2="${trackY+trackH}" stroke="rgba(240,242,247,0.7)" stroke-width="1.5"/>`;
       if(s.type==='break'&&w>50) bars+=`<text x="${x+w/2}" y="${trackY+trackH/2+4}" text-anchor="middle" font-family="monospace" font-size="9" fill="${c.text}" opacity="0.8">break</text>`;
       if(s.type!=='break'){
-        let cx=(x+w/2).toFixed(1),clipId=`lc${i}`;
+        let cx=(x+w/2).toFixed(1),clipId='lc'+i;
         clipDefs+=`<clipPath id="${clipId}"><rect x="${x}" y="0" width="${w}" height="${trackY}"/></clipPath>`;
         labels+=`<g clip-path="url(#${clipId})"><text transform="translate(${cx},${trackY-4}) rotate(-90)" text-anchor="start" font-family="Outfit,sans-serif" font-size="10" fill="${c.text}" opacity="0.88">${esc(s.name)}</text></g>`;
         labels+=`<line x1="${cx}" y1="${trackY}" x2="${cx}" y2="${trackY+5}" stroke="${c.text}" stroke-width="0.6" opacity="0.3"/>`;
@@ -594,7 +631,7 @@
       tlBars+=`<line x1="${x+w}" y1="${trackY}" x2="${x+w}" y2="${trackY+trackH}" stroke="rgba(240,242,247,0.7)" stroke-width="1.5"/>`;
       if(s.type==='break'&&w>60) tlBars+=`<text x="${x+w/2}" y="${trackY+trackH/2+4}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="${ec.text}" opacity="0.8">break</text>`;
       if(s.type!=='break'){
-        let cx=(x+w/2).toFixed(1),clipId=`elc${i}`;
+        let cx=(x+w/2).toFixed(1),clipId='elc'+i;
         tlClips+=`<clipPath id="${clipId}"><rect x="${x}" y="0" width="${w}" height="${trackY}"/></clipPath>`;
         tlLabels+=`<g clip-path="url(#${clipId})"><text transform="translate(${cx},${trackY-4}) rotate(-90)" text-anchor="start" font-family="Outfit,sans-serif" font-size="10" fill="${ec.text}" opacity="0.88">${esc(s.name)}</text></g>`;
         tlLabels+=`<line x1="${cx}" y1="${trackY}" x2="${cx}" y2="${trackY+5}" stroke="${ec.text}" stroke-width="0.6" opacity="0.3"/>`;
@@ -625,7 +662,6 @@
       let projRows=d.projects.map(p=>{let ec=EXPORT_COLORS[p.outcome];return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(100,140,200,0.07);"><span style="font-family:'DM Mono',monospace;font-size:10px;color:#8890aa;min-width:36px;">${fmtMM(p.durationMs)}</span><span style="font-size:12px;color:#4a5680;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</span><span style="font-size:10px;font-family:'DM Mono',monospace;background:${ec.bg};color:${ec.text};border-radius:3px;padding:1px 6px;">${p.outcome}</span></div>`;}).join('');
       return `<div style="background:#f5f6fa;border:1px solid rgba(60,80,140,0.12);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:${color}22;border:1px solid ${color}55;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:${color};flex-shrink:0;">${initials}</div><div><div style="font-size:13px;font-weight:500;color:#1a2035;">${esc(owner)}</div><div style="font-size:10px;color:#8890aa;font-family:'DM Mono',monospace;">${d.projects.length} projects · ${share}% of session</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;"><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${d.projects.length}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Projects</div></div><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${fmtMM(d.totalMs)}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Total</div></div><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${fmtMM(d.totalMs/d.projects.length)}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Avg</div></div></div><div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div><div><div style="font-size:9px;color:#8890aa;font-family:'DM Mono',monospace;text-transform:uppercase;">Share of session</div><div style="height:3px;background:rgba(0,0,0,0.06);border-radius:2px;margin-top:5px;"><div style="height:3px;width:${share}%;background:${color};border-radius:2px;"></div></div></div><div style="border-top:1px solid rgba(100,140,200,0.08);padding-top:8px;"><div style="font-size:9px;color:#8890aa;font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:4px;">Projects</div>${projRows}</div></div>`;
     }).join('');
-
     let outcomeCards=OUTCOMES.map(o=>{let ec=EXPORT_COLORS[o];return `<div style="display:flex;align-items:center;gap:8px;background:${ec.bg};border:1px solid ${ec.border};border-radius:6px;padding:7px 12px;"><span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:${ec.text};min-width:22px">${counts[o]}</span><span style="font-size:12px;font-weight:500;color:${ec.text}">${o}</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:#8890aa;margin-left:auto">${avgFmt(o)} avg</span></div>`;}).join('');
 
     let html=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Concept Review Minutes — ${esc(stage)} ${esc(season)}</title><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"><style>:root{--bg0:#f0f2f7;--bg1:#fff;--bg2:#f5f6fa;--bg3:#eaecf4;--border:rgba(60,80,140,0.12);--text-primary:#1a2035;--text-secondary:#4a5680;--text-muted:#8890aa;--accent:#0284c7;}*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Outfit',sans-serif;background:var(--bg0);color:var(--text-primary);font-size:14px;line-height:1.5;padding:32px;}body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(56,189,248,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}.wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;}h1{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;}.subtitle{display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;}.sub-item{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);}.sub-item span{color:var(--text-secondary);}.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}.stat{background:var(--bg1);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}.stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;font-family:'DM Mono',monospace;margin-bottom:5px;}.stat-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;}.stat-value.ac{color:var(--accent);}.stat-value.gr{color:#16a34a;}.card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;}.card-title{font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}.outcome-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}.tl-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);font-family:'DM Mono',monospace;}.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}th{text-align:left;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);padding:0 8px 10px 0;border-bottom:1px solid var(--border);font-weight:400;}td{padding:9px 8px 9px 0;border-bottom:1px solid var(--border);vertical-align:top;}tr:last-child td{border-bottom:none;}.mono{font-family:'DM Mono',monospace;}.muted{color:var(--text-muted);}.secondary{color:var(--text-secondary);}.bold{font-weight:500;}.notes{font-size:12px;white-space:pre-wrap;line-height:1.5;}.badge{display:inline-block;font-size:10px;font-weight:500;font-family:'DM Mono',monospace;border-radius:4px;padding:2px 8px;letter-spacing:0.04em;text-transform:uppercase;}</style></head><body><div class="wrap"><h1>Concept Review Minutes</h1><div class="subtitle"><div class="sub-item">Stage <span>${esc(stage)}</span></div><div class="sub-item">Season <span>${esc(season)}</span></div><div class="sub-item">${dateStr}</div><div class="sub-item">Generated <span>${timeStr}</span></div></div><hr class="divider"><div class="stats"><div class="stat"><div class="stat-label">Session elapsed</div><div class="stat-value ac">${elapsed}</div></div><div class="stat"><div class="stat-label">Projects reviewed</div><div class="stat-value">${projects.length}</div></div><div class="stat"><div class="stat-label">Avg time / project</div><div class="stat-value gr">${avgAll}</div></div><div class="stat"><div class="stat-label">Break time</div><div class="stat-value">${fmtMM(bTotal)}</div></div></div><div class="card"><div class="card-title">Session timeline</div><div style="width:100%;overflow-x:auto;"><svg viewBox="0 0 1268 170" height="170" style="min-width:600px;width:100%;">${tlSvg}</svg></div><div class="tl-legend"><div class="legend-item"><div class="legend-dot" style="background:rgba(74,222,128,0.35);border:1px solid rgba(74,222,128,0.5)"></div>Continue Project</div><div class="legend-item"><div class="legend-dot" style="background:rgba(248,113,113,0.35);border:1px solid rgba(248,113,113,0.5)"></div>Cancel Project</div><div class="legend-item"><div class="legend-dot" style="background:rgba(167,139,250,0.35);border:1px solid rgba(167,139,250,0.5)"></div>Vision Agreed Approval</div><div class="legend-item"><div class="legend-dot" style="background:rgba(251,191,36,0.28);border:1px solid rgba(251,191,36,0.45)"></div>Break</div></div><div class="outcome-row">${outcomeCards}</div></div><div class="card"><div class="card-title">Logged projects</div><table><thead><tr><th style="width:3%">#</th><th style="width:18%">Project</th><th style="width:12%">Owner</th><th style="width:7%">Start</th><th style="width:7%">Duration</th><th style="width:14%">Outcome</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table></div><div class="card"><div class="card-title">Owner summary</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">${ownerCards}</div></div></div></body></html>`;

@@ -8,6 +8,7 @@ A lightweight, browser-based tool for logging product concept reviews in real ti
 - **Project gate** — the note-taking area is locked behind a Start Project button, so the timer always runs before you type. Selecting an outcome immediately resets the gate for the next project
 - **Live session timer** with per-project stopwatch and break tracking
 - **Three outcomes** — Continue Project, Vision Agreed Approval, Cancel Project
+- **Inline edit** — edit any logged project's name, owner, and notes directly in the table via the edit button, without disrupting the session
 - **Session timeline** — visual SVG bar showing the full session at a glance, colour-coded by outcome and annotated with project names
 - **Owner summary cards** — per-owner breakdown of projects, time, and outcomes
 - **One-click HTML export** — generates a self-contained report file you can share or archive
@@ -31,7 +32,8 @@ Download or clone the repo, then open `index.html` in any browser. No install ne
 4. Fill in the **project name**, **owner**, and **notes** as the review happens
 5. Click **Continue Project**, **Vision Agreed Approval**, or **Cancel Project** to log it — the gate resets immediately for the next project
 6. Use **Break** to pause everything between reviews
-7. Click **Export HTML report** at the end to download a shareable report
+7. Click the **pencil icon** on any logged project to edit its name, owner, or notes inline, then click **Save changes**
+8. Click **Export HTML report** at the end to download a shareable report
 
 ## Exporting
 
