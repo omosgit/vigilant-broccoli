@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Concept Review Tool</title>
+<title>Concept Review Minutes Tool</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -54,13 +54,11 @@
 
   .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
 
-  /* Header */
   .app-header { margin-bottom: 24px; }
-  h1 { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+  h1 { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
   .app-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
-  /* Top bar */
-  .top-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .top-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
   .meta-input {
     background: var(--bg1);
     border: 1px solid var(--border);
@@ -75,7 +73,6 @@
   .meta-input:focus { border-color: var(--border-bright); }
   .meta-input::placeholder { color: var(--text-muted); }
 
-  /* Stats */
   .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
   .stat-card { background: var(--bg1); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 13px; }
   .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; font-family: 'DM Mono', monospace; margin-bottom: 5px; }
@@ -83,13 +80,51 @@
   .stat-val.blue { color: var(--accent); }
   .stat-val.green { color: var(--c-continue); }
 
-  /* Section title */
   .section-title { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
 
-  /* Card */
   .card { background: var(--bg1); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 20px; }
 
-  /* Active project */
+  /* Buttons */
+  .btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: background 0.15s, border-color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--bg2); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+  .btn.green  { border-color: rgba(22,163,74,0.4);   color: var(--c-continue); }
+  .btn.green:hover  { background: var(--c-continue-bg); }
+  .btn.red    { border-color: rgba(220,38,38,0.4);   color: var(--c-cancel); }
+  .btn.red:hover    { background: var(--c-cancel-bg); }
+  .btn.purple { border-color: rgba(124,58,237,0.4);  color: var(--c-va); }
+  .btn.purple:hover { background: var(--c-va-bg); }
+  .btn.primary { background: rgba(2,132,199,0.1); border-color: rgba(2,132,199,0.4); color: var(--accent); }
+  .btn.primary:hover { background: rgba(2,132,199,0.18); }
+  .btn.amber  { border-color: rgba(217,119,6,0.4);   color: var(--c-break); }
+  .btn.amber:hover  { background: var(--c-break-bg); }
+  .btn.session-start { background: rgba(22,163,74,0.1); border-color: rgba(22,163,74,0.45); color: var(--c-continue); font-weight: 500; }
+  .btn.session-start:hover { background: rgba(22,163,74,0.18); }
+  .btn.session-stop  { background: rgba(220,38,38,0.1); border-color: rgba(220,38,38,0.45); color: var(--c-cancel);   font-weight: 500; }
+  .btn.session-stop:hover  { background: rgba(220,38,38,0.18); }
+  .btn.start-project { background: rgba(22,163,74,0.12); border-color: rgba(22,163,74,0.5); color: var(--c-continue); font-size: 14px; padding: 10px 28px; font-weight: 500; }
+  .btn.start-project:hover { background: rgba(22,163,74,0.2); }
+
+  .outcome-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* Project panel + gate */
+  .project-panel { position: relative; background: var(--bg1); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 20px; overflow: hidden; }
+  .project-inner { padding: 16px 18px; }
   .project-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
   .field-input {
     background: var(--bg2);
@@ -107,39 +142,24 @@
   .field-input::placeholder { color: var(--text-muted); }
   textarea.field-input { resize: vertical; min-height: 72px; line-height: 1.5; }
 
-  /* Timer */
   .timer-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
   .timer-display { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; color: var(--accent); min-width: 72px; }
+  .timer-status { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
 
-  /* Buttons */
-  .btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 7px 14px;
-    font-size: 13px;
-    color: var(--text-primary);
-    cursor: pointer;
-    font-family: 'Outfit', sans-serif;
-    transition: background 0.15s, border-color 0.15s;
-    display: inline-flex;
+  .project-gate {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 12px;
+    border-radius: var(--radius-lg);
+    z-index: 10;
+    background: rgba(240,242,247,0.72);
+    backdrop-filter: blur(2px);
   }
-  .btn:hover { background: var(--bg2); }
-  .btn:active { transform: scale(0.98); }
-  .btn.green { border-color: rgba(22,163,74,0.4); color: var(--c-continue); }
-  .btn.green:hover { background: var(--c-continue-bg); }
-  .btn.red { border-color: rgba(220,38,38,0.4); color: var(--c-cancel); }
-  .btn.red:hover { background: var(--c-cancel-bg); }
-  .btn.purple { border-color: rgba(124,58,237,0.4); color: var(--c-va); }
-  .btn.purple:hover { background: var(--c-va-bg); }
-  .btn.primary { background: rgba(2,132,199,0.1); border-color: rgba(2,132,199,0.4); color: var(--accent); }
-  .btn.primary:hover { background: rgba(2,132,199,0.18); }
-  .btn.amber { border-color: rgba(217,119,6,0.4); color: var(--c-break); }
-  .btn.amber:hover { background: var(--c-break-bg); }
-
-  .outcome-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .gate-label { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
 
   /* Break bar */
   .break-bar {
@@ -171,11 +191,10 @@
   .bold { font-weight: 500; }
   .notes-cell { font-size: 12px; white-space: pre-wrap; line-height: 1.5; color: var(--text-muted); }
 
-  /* Badges */
   .badge { display: inline-block; font-size: 10px; font-weight: 500; font-family: 'DM Mono', monospace; border-radius: 4px; padding: 2px 8px; letter-spacing: 0.04em; text-transform: uppercase; }
   .b-continue { background: var(--c-continue-bg); color: var(--c-continue); }
-  .b-cancel { background: var(--c-cancel-bg); color: var(--c-cancel); }
-  .b-va { background: var(--c-va-bg); color: var(--c-va); }
+  .b-cancel   { background: var(--c-cancel-bg);   color: var(--c-cancel); }
+  .b-va       { background: var(--c-va-bg);        color: var(--c-va); }
 
   /* Owner cards */
   .owners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
@@ -191,23 +210,22 @@
   .owner-pills { display: flex; gap: 5px; flex-wrap: wrap; }
   .owner-pill { font-size: 10px; font-family: 'DM Mono', monospace; border-radius: 3px; padding: 2px 7px; }
   .share-label { font-size: 9px; color: var(--text-muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; }
-  .share-bar-bg { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 5px; }
+  .share-bar-bg { height: 3px; background: rgba(0,0,0,0.06); border-radius: 2px; margin-top: 5px; }
   .share-bar-fill { height: 3px; border-radius: 2px; }
   .proj-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(100,140,200,0.07); }
   .proj-row:last-child { border-bottom: none; }
 
-  /* Misc */
   .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 13px; }
   .export-row { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
-  .del-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0; font-size: 16px; line-height: 1; transition: color 0.15s; }
+  .del-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0; font-size: 18px; line-height: 1; transition: color 0.15s; }
   .del-btn:hover { color: var(--c-cancel); }
-  hr.divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
 
   @media (max-width: 600px) {
     body { padding: 16px; }
     .stat-row { grid-template-columns: repeat(2, 1fr); }
     .project-fields { grid-template-columns: 1fr; }
     .outcome-btns { flex-direction: column; }
+    .top-bar { gap: 8px; }
   }
 
   ::-webkit-scrollbar { width: 6px; }
@@ -219,14 +237,16 @@
 <div class="wrap">
 
   <div class="app-header">
-    <h1>Concept Review Tool</h1>
+    <h1>Concept Review Minutes Tool</h1>
     <div class="app-subtitle">Log projects, track time, export your session report</div>
   </div>
 
   <div class="top-bar">
     <input class="meta-input" id="stageInput" placeholder="Stage (e.g. CR4)" style="width:130px;">
     <input class="meta-input" id="seasonInput" placeholder="Season (e.g. SS28)" style="width:140px;">
-    <button class="btn amber" id="breakBtn" onclick="toggleBreak()">&#9749; Break</button>
+    <div style="flex:1"></div>
+    <button class="btn session-start" id="sessionBtn" onclick="toggleSession()">&#9654; Start Session</button>
+    <button class="btn amber" id="breakBtn" onclick="toggleBreak()" disabled>&#9749; Break</button>
   </div>
 
   <div class="stat-row">
@@ -236,25 +256,29 @@
     <div class="stat-card"><div class="stat-label">Break time</div><div class="stat-val" id="breakTime">00:00</div></div>
   </div>
 
-  <div class="break-bar" id="breakBar">
-    &#9749; Break in progress — timer paused
-  </div>
+  <div class="break-bar" id="breakBar">&#9749; Break in progress</div>
 
-  <div class="card">
-    <div class="section-title">Current project</div>
-    <div class="project-fields">
-      <input class="field-input" id="projName" placeholder="Project name">
-      <input class="field-input" id="ownerName" placeholder="Owner">
+  <div class="project-panel">
+    <div class="project-gate" id="projectGate">
+      <div class="gate-label" id="gateLabel">Start the session to begin</div>
+      <button class="btn start-project" id="startProjBtn" onclick="startProject()" style="display:none;">&#9654; Start Project</button>
     </div>
-    <textarea class="field-input" id="projNotes" placeholder="Notes..."></textarea>
-    <div class="timer-row">
-      <div class="timer-display" id="projTimer">00:00</div>
-      <button class="btn" id="timerBtn" onclick="toggleTimer()">&#9654; Start</button>
-    </div>
-    <div class="outcome-btns">
-      <button class="btn green" onclick="logProject('Continue Project')">&#8594; Continue Project</button>
-      <button class="btn purple" onclick="logProject('Vision Agreed Approval')">&#10003; Vision Agreed Approval</button>
-      <button class="btn red" onclick="logProject('Cancel Project')">&#10005; Cancel Project</button>
+    <div class="project-inner">
+      <div class="section-title">Current project</div>
+      <div class="project-fields">
+        <input class="field-input" id="projName" placeholder="Project name">
+        <input class="field-input" id="ownerName" placeholder="Owner">
+      </div>
+      <textarea class="field-input" id="projNotes" placeholder="Notes..."></textarea>
+      <div class="timer-row">
+        <div class="timer-display" id="projTimer">00:00</div>
+        <div class="timer-status" id="projStatus">not started</div>
+      </div>
+      <div class="outcome-btns" id="outcomeBtns">
+        <button class="btn green"  onclick="logProject('Continue Project')"       disabled>&#8594; Continue Project</button>
+        <button class="btn purple" onclick="logProject('Vision Agreed Approval')" disabled>&#10003; Vision Agreed Approval</button>
+        <button class="btn red"    onclick="logProject('Cancel Project')"         disabled>&#10005; Cancel Project</button>
+      </div>
     </div>
   </div>
 
@@ -282,7 +306,7 @@
 
   <div class="card">
     <div class="section-title">Logged projects</div>
-    <div class="empty-state" id="emptyState">No projects logged yet — fill in the form above and click an outcome button to get started.</div>
+    <div class="empty-state" id="emptyState">No projects logged yet — start a session, hit Start Project, then choose an outcome to log it.</div>
     <table class="log-table" id="logTable" style="display:none;">
       <thead><tr>
         <th style="width:3%">#</th>
@@ -303,222 +327,218 @@
   </div>
 
 </div>
-
 <script>
-  // ── State ──────────────────────────────────────────────────────────────────
-  let sessionStart = Date.now();
-  let projTimerStart = null;
-  let projElapsed = 0;
-  let timerRunning = false;
-  let projects = [];
-  let breaks = [];
-  let breakStart = null;
-  let totalBreak = 0;
-  let onBreak = false;
+  let sessionStart = null, sessionRunning = false;
+  let projTimerStart = null, projElapsed = 0, projRunning = false;
+  let projects = [], breaks = [];
+  let breakStart = null, totalBreak = 0, onBreak = false;
   let projStartWallTime = null;
 
-  const OUTCOMES = ['Continue Project', 'Vision Agreed Approval', 'Cancel Project'];
-
+  const OUTCOMES = ['Continue Project','Vision Agreed Approval','Cancel Project'];
   const COLORS = {
-    'Continue Project':      { fill: 'rgba(74,222,128,0.22)',  text: '#16a34a' },
-    'Cancel Project':        { fill: 'rgba(248,113,113,0.22)', text: '#dc2626' },
-    'Vision Agreed Approval':{ fill: 'rgba(167,139,250,0.22)', text: '#7c3aed' },
-    break:                   { fill: 'rgba(251,191,36,0.18)',  text: '#d97706' }
+    'Continue Project':       {fill:'rgba(74,222,128,0.22)', text:'#16a34a'},
+    'Cancel Project':         {fill:'rgba(248,113,113,0.22)',text:'#dc2626'},
+    'Vision Agreed Approval': {fill:'rgba(167,139,250,0.22)',text:'#7c3aed'},
+    break:                    {fill:'rgba(251,191,36,0.18)', text:'#d97706'}
   };
-
   const EXPORT_COLORS = {
-    'Continue Project':      { fill: 'rgba(22,163,74,0.22)',   text: '#16a34a', bg: 'rgba(22,163,74,0.10)',   border: 'rgba(74,222,128,0.25)'  },
-    'Cancel Project':        { fill: 'rgba(220,38,38,0.20)',   text: '#dc2626', bg: 'rgba(220,38,38,0.09)',   border: 'rgba(248,113,113,0.25)' },
-    'Vision Agreed Approval':{ fill: 'rgba(124,58,237,0.20)',  text: '#7c3aed', bg: 'rgba(124,58,237,0.10)',  border: 'rgba(167,139,250,0.25)' },
-    break:                   { fill: 'rgba(217,119,6,0.18)',   text: '#d97706', bg: '',                       border: ''                       }
+    'Continue Project':       {fill:'rgba(22,163,74,0.22)',  text:'#16a34a',bg:'rgba(22,163,74,0.10)',  border:'rgba(74,222,128,0.25)'},
+    'Cancel Project':         {fill:'rgba(220,38,38,0.20)',  text:'#dc2626',bg:'rgba(220,38,38,0.09)',  border:'rgba(248,113,113,0.25)'},
+    'Vision Agreed Approval': {fill:'rgba(124,58,237,0.20)', text:'#7c3aed',bg:'rgba(124,58,237,0.10)', border:'rgba(167,139,250,0.25)'},
+    break:                    {fill:'rgba(217,119,6,0.18)',  text:'#d97706',bg:'',border:''}
   };
-
   const PILL_STYLE = {
-    'Continue Project':      'background:rgba(74,222,128,0.15);color:#4ade80',
-    'Cancel Project':        'background:rgba(248,113,113,0.15);color:#f87171',
-    'Vision Agreed Approval':'background:rgba(167,139,250,0.15);color:#a78bfa'
+    'Continue Project':       'background:rgba(74,222,128,0.15);color:#4ade80',
+    'Cancel Project':         'background:rgba(248,113,113,0.15);color:#f87171',
+    'Vision Agreed Approval': 'background:rgba(167,139,250,0.15);color:#a78bfa'
   };
-
   const OWNER_COLORS = ['#38bdf8','#4ade80','#a78bfa','#fb923c','#f472b6','#34d399','#facc15','#60a5fa'];
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
-  function pad(n) { return String(n).padStart(2, '0'); }
-  function fmtHMS(ms) {
-    let s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
-    return pad(h) + ':' + pad(m) + ':' + pad(sec);
-  }
-  function fmtMM(ms) {
-    let s = Math.floor(ms / 1000), m = Math.floor(s / 60), sec = s % 60;
-    return pad(m) + ':' + pad(sec);
-  }
-  function nowHHMM() {
-    let d = new Date();
-    return pad(d.getHours()) + ':' + pad(d.getMinutes());
-  }
-  function esc(s) {
-    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  function pad(n){return String(n).padStart(2,'0');}
+  function fmtHMS(ms){let s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return pad(h)+':'+pad(m)+':'+pad(sec);}
+  function fmtMM(ms){let s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60;return pad(m)+':'+pad(sec);}
+  function nowHHMM(){let d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes());}
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-  // ── Clocks ─────────────────────────────────────────────────────────────────
-  setInterval(() => {
-    document.getElementById('sessionElapsed').textContent = fmtHMS(Date.now() - sessionStart);
-    let bTotal = totalBreak + (onBreak ? Date.now() - breakStart : 0);
-    document.getElementById('breakTime').textContent = fmtMM(bTotal);
-    document.getElementById('projCount').textContent = projects.length;
-    if (projects.length) {
-      let total = projects.reduce((a, p) => a + p.durationMs, 0);
-      document.getElementById('avgTime').textContent = fmtMM(total / projects.length);
+  setInterval(()=>{
+    if(!sessionRunning)return;
+    document.getElementById('sessionElapsed').textContent=fmtHMS(Date.now()-sessionStart);
+    document.getElementById('breakTime').textContent=fmtMM(totalBreak+(onBreak?Date.now()-breakStart:0));
+    document.getElementById('projCount').textContent=projects.length;
+    if(projects.length){
+      document.getElementById('avgTime').textContent=fmtMM(projects.reduce((a,p)=>a+p.durationMs,0)/projects.length);
     }
-  }, 1000);
+  },1000);
 
-  setInterval(() => {
-    if (!timerRunning) return;
-    document.getElementById('projTimer').textContent = fmtMM(projElapsed + (Date.now() - projTimerStart));
-  }, 500);
+  setInterval(()=>{
+    if(projRunning) document.getElementById('projTimer').textContent=fmtMM(projElapsed+(Date.now()-projTimerStart));
+  },500);
 
-  // ── Timer ──────────────────────────────────────────────────────────────────
-  function toggleTimer() {
-    if (onBreak) return;
-    if (!timerRunning) {
-      if (!projStartWallTime) projStartWallTime = Date.now();
-      projTimerStart = Date.now();
-      timerRunning = true;
-      document.getElementById('timerBtn').innerHTML = '&#9646;&#9646; Pause';
+  function toggleSession(){
+    if(!sessionRunning){
+      sessionStart=Date.now(); sessionRunning=true;
+      document.getElementById('sessionBtn').className='btn session-stop';
+      document.getElementById('sessionBtn').innerHTML='&#9632; Stop Session';
+      document.getElementById('breakBtn').disabled=false;
+      showGateReady();
     } else {
-      projElapsed += Date.now() - projTimerStart;
-      timerRunning = false;
-      document.getElementById('timerBtn').innerHTML = '&#9654; Start';
+      if(projRunning){projElapsed+=Date.now()-projTimerStart; projRunning=false;}
+      sessionRunning=false;
+      document.getElementById('sessionBtn').className='btn session-start';
+      document.getElementById('sessionBtn').innerHTML='&#9654; Start Session';
+      document.getElementById('breakBtn').disabled=true;
+      showGateStopped();
     }
   }
 
-  // ── Break ──────────────────────────────────────────────────────────────────
-  function toggleBreak() {
-    if (!onBreak) {
-      if (timerRunning) {
-        projElapsed += Date.now() - projTimerStart;
-        timerRunning = false;
-        document.getElementById('timerBtn').innerHTML = '&#9654; Start';
+  function showGateStopped(){
+    let g=document.getElementById('projectGate');
+    g.style.display='flex';
+    document.getElementById('gateLabel').textContent='Session stopped';
+    document.getElementById('startProjBtn').style.display='none';
+    setOutcomes(false);
+  }
+
+  function showGateReady(){
+    let g=document.getElementById('projectGate');
+    g.style.display='flex';
+    document.getElementById('gateLabel').textContent='Ready for next project';
+    document.getElementById('startProjBtn').style.display='inline-flex';
+    setOutcomes(false);
+  }
+
+  function hideGate(){
+    document.getElementById('projectGate').style.display='none';
+    setOutcomes(true);
+    document.getElementById('projStatus').textContent='timer running';
+  }
+
+  function setOutcomes(on){
+    document.querySelectorAll('#outcomeBtns button').forEach(b=>b.disabled=!on);
+  }
+
+  function startProject(){
+    if(!sessionRunning)return;
+    projStartWallTime=Date.now(); projTimerStart=Date.now(); projElapsed=0; projRunning=true;
+    document.getElementById('projTimer').textContent='00:00';
+    document.getElementById('projName').value='';
+    document.getElementById('ownerName').value='';
+    document.getElementById('projNotes').value='';
+    hideGate();
+  }
+
+  function toggleBreak(){
+    if(!sessionRunning)return;
+    if(!onBreak){
+      if(projRunning){projElapsed+=Date.now()-projTimerStart; projRunning=false; document.getElementById('projStatus').textContent='paused (break)';}
+      breakStart=Date.now(); onBreak=true;
+      document.getElementById('breakBar').style.display='flex';
+      document.getElementById('breakBtn').innerHTML='&#9654; End break';
+    } else {
+      let dur=Date.now()-breakStart; totalBreak+=dur;
+      breaks.push({startMs:breakStart-sessionStart,durationMs:dur});
+      onBreak=false;
+      document.getElementById('breakBar').style.display='none';
+      document.getElementById('breakBtn').innerHTML='&#9749; Break';
+      if(projElapsed>0 && document.getElementById('projectGate').style.display==='none'){
+        projTimerStart=Date.now(); projRunning=true;
+        document.getElementById('projStatus').textContent='timer running';
       }
-      breakStart = Date.now();
-      onBreak = true;
-      document.getElementById('breakBar').style.display = 'flex';
-      document.getElementById('breakBtn').innerHTML = '&#9654; End break';
-    } else {
-      let dur = Date.now() - breakStart;
-      totalBreak += dur;
-      breaks.push({ startMs: breakStart - sessionStart, durationMs: dur });
-      onBreak = false;
-      document.getElementById('breakBar').style.display = 'none';
-      document.getElementById('breakBtn').innerHTML = '&#9749; Break';
       renderTimeline();
     }
   }
 
-  // ── Log project ────────────────────────────────────────────────────────────
-  function logProject(outcome) {
-    let name = document.getElementById('projName').value.trim();
-    if (!name) { document.getElementById('projName').focus(); return; }
-    let dur = timerRunning ? projElapsed + (Date.now() - projTimerStart) : projElapsed;
-    let owner = document.getElementById('ownerName').value.trim() || '—';
-    let notes = document.getElementById('projNotes').value.trim();
-    if (timerRunning) { projElapsed += Date.now() - projTimerStart; timerRunning = false; }
-    projects.push({
-      id: Date.now(), name, owner, notes, outcome, durationMs: dur,
-      startMs: (projStartWallTime || Date.now() - dur) - sessionStart,
-      index: projects.length + 1, startTime: nowHHMM()
-    });
+  function logProject(outcome){
+    if(!projRunning && projElapsed===0)return;
+    let name=document.getElementById('projName').value.trim()||'(unnamed)';
+    let dur=projRunning?projElapsed+(Date.now()-projTimerStart):projElapsed;
+    let owner=document.getElementById('ownerName').value.trim()||'—';
+    let notes=document.getElementById('projNotes').value.trim();
+    if(projRunning){projElapsed+=Date.now()-projTimerStart; projRunning=false;}
+    projects.push({id:Date.now(),name,owner,notes,outcome,durationMs:dur,
+      startMs:projStartWallTime-sessionStart,index:projects.length+1,startTime:nowHHMM()});
+    projElapsed=0; projStartWallTime=null;
+    document.getElementById('projTimer').textContent='00:00';
+    document.getElementById('projStatus').textContent='not started';
     renderAll();
-    document.getElementById('projName').value = '';
-    document.getElementById('ownerName').value = '';
-    document.getElementById('projNotes').value = '';
-    projElapsed = 0; projStartWallTime = null;
-    document.getElementById('projTimer').textContent = '00:00';
-    document.getElementById('timerBtn').innerHTML = '&#9654; Start';
+    showGateReady();
   }
 
-  function deleteProject(id) {
-    projects = projects.filter(p => p.id !== id);
-    projects.forEach((p, i) => p.index = i + 1);
+  function deleteProject(id){
+    projects=projects.filter(p=>p.id!==id);
+    projects.forEach((p,i)=>p.index=i+1);
     renderAll();
   }
 
-  function renderAll() { renderLog(); renderTimeline(); renderOwners(); }
+  function renderAll(){renderLog();renderTimeline();renderOwners();}
 
-  // ── Log table ──────────────────────────────────────────────────────────────
-  function renderLog() {
-    let empty = document.getElementById('emptyState'), table = document.getElementById('logTable');
-    if (!projects.length) { empty.style.display = 'block'; table.style.display = 'none'; return; }
-    empty.style.display = 'none'; table.style.display = 'table';
-    let badgeCls = { 'Continue Project': 'b-continue', 'Cancel Project': 'b-cancel', 'Vision Agreed Approval': 'b-va' };
-    document.getElementById('logBody').innerHTML = projects.map(p => `
+  function renderLog(){
+    let empty=document.getElementById('emptyState'),table=document.getElementById('logTable');
+    if(!projects.length){empty.style.display='block';table.style.display='none';return;}
+    empty.style.display='none'; table.style.display='table';
+    let bc={'Continue Project':'b-continue','Cancel Project':'b-cancel','Vision Agreed Approval':'b-va'};
+    document.getElementById('logBody').innerHTML=projects.map(p=>`
       <tr>
         <td class="mono muted">${p.index}</td>
         <td class="bold">${esc(p.name)}</td>
         <td class="secondary">${esc(p.owner)}</td>
         <td class="mono secondary">${p.startTime}</td>
         <td class="mono">${fmtMM(p.durationMs)}</td>
-        <td><span class="badge ${badgeCls[p.outcome]}">${p.outcome}</span></td>
+        <td><span class="badge ${bc[p.outcome]}">${p.outcome}</span></td>
         <td class="notes-cell">${esc(p.notes)}</td>
         <td><button class="del-btn" onclick="deleteProject(${p.id})" aria-label="Delete">&times;</button></td>
       </tr>`).join('');
   }
 
-  // ── Timeline ───────────────────────────────────────────────────────────────
-  function renderTimeline() {
-    if (!projects.length && !breaks.length) { document.getElementById('timelineSection').style.display = 'none'; return; }
-    document.getElementById('timelineSection').style.display = 'block';
-    let W = 1100, trackY = 100, trackH = 38, totalMs = Date.now() - sessionStart;
-    let scale = x => ((x / totalMs) * W).toFixed(1);
-    let segs = [
-      ...projects.map(p => ({ startMs: p.startMs, durationMs: p.durationMs, type: p.outcome, name: p.name })),
-      ...breaks.map(b => ({ startMs: b.startMs, durationMs: b.durationMs, type: 'break', name: 'break' }))
-    ].sort((a, b) => a.startMs - b.startMs);
-    let bars = '', labels = '', clipDefs = '';
-    segs.forEach((s, i) => {
-      let x = parseFloat(scale(s.startMs)), w = Math.max(parseFloat(scale(s.durationMs)), 2);
-      let c = COLORS[s.type] || COLORS['Continue Project'];
-      bars += `<rect x="${x}" y="${trackY}" width="${w}" height="${trackH}" fill="${c.fill}" rx="1"/>`;
-      bars += `<line x1="${x+w}" y1="${trackY}" x2="${x+w}" y2="${trackY+trackH}" stroke="rgba(240,242,247,0.7)" stroke-width="1.5"/>`;
-      if (s.type === 'break' && w > 50) {
-        bars += `<text x="${x+w/2}" y="${trackY+trackH/2+4}" text-anchor="middle" font-family="monospace" font-size="9" fill="${c.text}" opacity="0.8">break</text>`;
-      }
-      if (s.type !== 'break') {
-        let cx = (x + w / 2).toFixed(1);
-        let clipId = `lc${i}`;
-        clipDefs += `<clipPath id="${clipId}"><rect x="${x}" y="0" width="${w}" height="${trackY}"/></clipPath>`;
-        labels += `<g clip-path="url(#${clipId})"><text transform="translate(${cx},${trackY-4}) rotate(-90)" text-anchor="start" font-family="Outfit,sans-serif" font-size="10" fill="${c.text}" opacity="0.88">${esc(s.name)}</text></g>`;
-        labels += `<line x1="${cx}" y1="${trackY}" x2="${cx}" y2="${trackY+5}" stroke="${c.text}" stroke-width="0.6" opacity="0.3"/>`;
+  function renderTimeline(){
+    if(!projects.length&&!breaks.length){document.getElementById('timelineSection').style.display='none';return;}
+    document.getElementById('timelineSection').style.display='block';
+    let W=1100,trackY=100,trackH=38,totalMs=Date.now()-sessionStart;
+    let scale=x=>((x/totalMs)*W).toFixed(1);
+    let segs=[
+      ...projects.map(p=>({startMs:p.startMs,durationMs:p.durationMs,type:p.outcome,name:p.name})),
+      ...breaks.map(b=>({startMs:b.startMs,durationMs:b.durationMs,type:'break',name:'break'}))
+    ].sort((a,b)=>a.startMs-b.startMs);
+    let bars='',labels='',clipDefs='';
+    segs.forEach((s,i)=>{
+      let x=parseFloat(scale(s.startMs)),w=Math.max(parseFloat(scale(s.durationMs)),2);
+      let c=COLORS[s.type]||COLORS['Continue Project'];
+      bars+=`<rect x="${x}" y="${trackY}" width="${w}" height="${trackH}" fill="${c.fill}" rx="1"/>`;
+      bars+=`<line x1="${x+w}" y1="${trackY}" x2="${x+w}" y2="${trackY+trackH}" stroke="rgba(240,242,247,0.7)" stroke-width="1.5"/>`;
+      if(s.type==='break'&&w>50) bars+=`<text x="${x+w/2}" y="${trackY+trackH/2+4}" text-anchor="middle" font-family="monospace" font-size="9" fill="${c.text}" opacity="0.8">break</text>`;
+      if(s.type!=='break'){
+        let cx=(x+w/2).toFixed(1),clipId=`lc${i}`;
+        clipDefs+=`<clipPath id="${clipId}"><rect x="${x}" y="0" width="${w}" height="${trackY}"/></clipPath>`;
+        labels+=`<g clip-path="url(#${clipId})"><text transform="translate(${cx},${trackY-4}) rotate(-90)" text-anchor="start" font-family="Outfit,sans-serif" font-size="10" fill="${c.text}" opacity="0.88">${esc(s.name)}</text></g>`;
+        labels+=`<line x1="${cx}" y1="${trackY}" x2="${cx}" y2="${trackY+5}" stroke="${c.text}" stroke-width="0.6" opacity="0.3"/>`;
       }
     });
-    let ticks = '', tickMin = [5,10,15,20,30,60].find(t => parseFloat(scale(t * 60000)) > 80) || 60;
-    for (let t = tickMin; t * 60000 < totalMs; t += tickMin) {
-      let x = parseFloat(scale(t * 60000)).toFixed(1);
-      let d = new Date(sessionStart + t * 60000);
-      let label = pad(d.getHours()) + ':' + pad(d.getMinutes());
-      ticks += `<line x1="${x}" y1="${trackY+trackH}" x2="${x}" y2="${trackY+trackH+7}" stroke="rgba(60,80,200,0.35)" stroke-width="0.8"/>`;
-      ticks += `<text x="${x}" y="${trackY+trackH+17}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(60,80,140,0.85)">${label}</text>`;
+    let ticks='',tickMin=[5,10,15,20,30,60].find(t=>parseFloat(scale(t*60000))>80)||60;
+    for(let t=tickMin;t*60000<totalMs;t+=tickMin){
+      let x=parseFloat(scale(t*60000)).toFixed(1),d=new Date(sessionStart+t*60000),label=pad(d.getHours())+':'+pad(d.getMinutes());
+      ticks+=`<line x1="${x}" y1="${trackY+trackH}" x2="${x}" y2="${trackY+trackH+7}" stroke="rgba(60,80,200,0.35)" stroke-width="0.8"/>`;
+      ticks+=`<text x="${x}" y="${trackY+trackH+17}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(60,80,140,0.85)">${label}</text>`;
     }
-    let bg = `<path d="M6,${trackY} H${W-6} Q${W},${trackY} ${W},${trackY+6} V${trackY+trackH} H0 V${trackY+6} Q0,${trackY} 6,${trackY}" fill="rgba(220,224,237,0.9)"/>`;
-    document.getElementById('tlSvg').innerHTML = `<defs>${clipDefs}</defs>${bg}${bars}${ticks}${labels}`;
+    let bg=`<path d="M6,${trackY} H${W-6} Q${W},${trackY} ${W},${trackY+6} V${trackY+trackH} H0 V${trackY+6} Q0,${trackY} 6,${trackY}" fill="rgba(220,224,237,0.9)"/>`;
+    document.getElementById('tlSvg').innerHTML=`<defs>${clipDefs}</defs>${bg}${bars}${ticks}${labels}`;
   }
 
-  // ── Owner summary ──────────────────────────────────────────────────────────
-  function renderOwners() {
-    let sec = document.getElementById('ownersSection'), grid = document.getElementById('ownersGrid');
-    if (!projects.length) { sec.style.display = 'none'; return; }
-    sec.style.display = 'block';
-    let ownerMap = {}, ownerList = [];
-    projects.forEach(p => {
-      if (!ownerMap[p.owner]) { ownerMap[p.owner] = { projects: [], totalMs: 0 }; OUTCOMES.forEach(o => ownerMap[p.owner][o] = 0); ownerList.push(p.owner); }
-      ownerMap[p.owner].projects.push(p); ownerMap[p.owner].totalMs += p.durationMs; ownerMap[p.owner][p.outcome]++;
+  function renderOwners(){
+    let sec=document.getElementById('ownersSection'),grid=document.getElementById('ownersGrid');
+    if(!projects.length){sec.style.display='none';return;}
+    sec.style.display='block';
+    let ownerMap={},ownerList=[];
+    projects.forEach(p=>{
+      if(!ownerMap[p.owner]){ownerMap[p.owner]={projects:[],totalMs:0};OUTCOMES.forEach(o=>ownerMap[p.owner][o]=0);ownerList.push(p.owner);}
+      ownerMap[p.owner].projects.push(p); ownerMap[p.owner].totalMs+=p.durationMs; ownerMap[p.owner][p.outcome]++;
     });
-    let sessionMs = Date.now() - sessionStart;
-    grid.innerHTML = ownerList.map((owner, oi) => {
-      let d = ownerMap[owner], color = OWNER_COLORS[oi % OWNER_COLORS.length];
-      let share = Math.round((d.totalMs / sessionMs) * 100);
-      let initials = owner.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2);
-      let pills = OUTCOMES.filter(o => d[o] > 0).map(o => `<span class="owner-pill" style="${PILL_STYLE[o]}">${d[o]} ${o}</span>`).join('');
-      let projList = d.projects.map(p => `
+    let sessionMs=Date.now()-sessionStart;
+    grid.innerHTML=ownerList.map((owner,oi)=>{
+      let d=ownerMap[owner],color=OWNER_COLORS[oi%OWNER_COLORS.length];
+      let share=Math.round((d.totalMs/sessionMs)*100);
+      let initials=owner.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+      let pills=OUTCOMES.filter(o=>d[o]>0).map(o=>`<span class="owner-pill" style="${PILL_STYLE[o]}">${d[o]} ${o}</span>`).join('');
+      let projList=d.projects.map(p=>`
         <div class="proj-row">
           <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);min-width:36px;">${fmtMM(p.durationMs)}</span>
           <span style="font-size:12px;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(p.name)}</span>
@@ -530,13 +550,13 @@
             <div class="owner-avatar" style="background:${color}22;border:1px solid ${color}55;color:${color}">${initials}</div>
             <div>
               <div class="owner-name">${esc(owner)}</div>
-              <div class="owner-sub">${d.projects.length} project${d.projects.length !== 1 ? 's' : ''} · ${share}% of session</div>
+              <div class="owner-sub">${d.projects.length} project${d.projects.length!==1?'s':''} · ${share}% of session</div>
             </div>
           </div>
           <div class="owner-stats">
             <div class="owner-stat"><div class="owner-stat-val" style="color:${color}">${d.projects.length}</div><div class="owner-stat-label">Projects</div></div>
             <div class="owner-stat"><div class="owner-stat-val" style="color:${color}">${fmtMM(d.totalMs)}</div><div class="owner-stat-label">Total</div></div>
-            <div class="owner-stat"><div class="owner-stat-val" style="color:${color}">${fmtMM(d.totalMs / d.projects.length)}</div><div class="owner-stat-label">Avg</div></div>
+            <div class="owner-stat"><div class="owner-stat-val" style="color:${color}">${fmtMM(d.totalMs/d.projects.length)}</div><div class="owner-stat-label">Avg</div></div>
           </div>
           <div class="owner-pills">${pills}</div>
           <div class="share-label">Share of session</div>
@@ -546,154 +566,74 @@
     }).join('');
   }
 
-  // ── Export ─────────────────────────────────────────────────────────────────
-  function exportHTML() {
-    let stage = document.getElementById('stageInput').value.trim() || 'CR';
-    let season = document.getElementById('seasonInput').value.trim() || 'SS';
-    let now = new Date();
-    let dateStr = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    let timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes());
-    let sessionMs = Date.now() - sessionStart;
-    let elapsed = fmtHMS(sessionMs);
-    let bTotal = totalBreak + (onBreak ? Date.now() - breakStart : 0);
-    let counts = {}, durSums = {};
-    OUTCOMES.forEach(o => { counts[o] = 0; durSums[o] = 0; });
-    projects.forEach(p => { counts[p.outcome]++; durSums[p.outcome] += p.durationMs; });
-    let avgFmt = o => counts[o] ? fmtMM(durSums[o] / counts[o]) : '—';
-    let avgAll = projects.length ? fmtMM(projects.reduce((a, p) => a + p.durationMs, 0) / projects.length) : '—';
+  function exportHTML(){
+    let stage=document.getElementById('stageInput').value.trim()||'CR';
+    let season=document.getElementById('seasonInput').value.trim()||'SS';
+    let now=new Date();
+    let dateStr=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    let timeStr=pad(now.getHours())+':'+pad(now.getMinutes());
+    let sessionMs=sessionStart?Date.now()-sessionStart:0;
+    let elapsed=fmtHMS(sessionMs);
+    let bTotal=totalBreak+(onBreak?Date.now()-breakStart:0);
+    let counts={},durSums={};
+    OUTCOMES.forEach(o=>{counts[o]=0;durSums[o]=0;});
+    projects.forEach(p=>{counts[p.outcome]++;durSums[p.outcome]+=p.durationMs;});
+    let avgFmt=o=>counts[o]?fmtMM(durSums[o]/counts[o]):'—';
+    let avgAll=projects.length?fmtMM(projects.reduce((a,p)=>a+p.durationMs,0)/projects.length):'—';
 
-    // Build timeline SVG
-    let W = 1268, trackY = 100, trackH = 38;
-    let scale = x => ((x / sessionMs) * W).toFixed(1);
-    let segs = [
-      ...projects.map(p => ({ startMs: p.startMs, durationMs: p.durationMs, type: p.outcome, name: p.name })),
-      ...breaks.map(b => ({ startMs: b.startMs, durationMs: b.durationMs, type: 'break', name: 'break' }))
-    ].sort((a, b) => a.startMs - b.startMs);
-    let tlBars = '', tlLabels = '', tlClips = '';
-    segs.forEach((s, i) => {
-      let x = parseFloat(scale(s.startMs)), w = Math.max(parseFloat(scale(s.durationMs)), 2);
-      let ec = EXPORT_COLORS[s.type] || EXPORT_COLORS['Continue Project'];
-      tlBars += `<rect x="${x}" y="${trackY}" width="${w}" height="${trackH}" fill="${ec.fill}"/>`;
-      tlBars += `<line x1="${x+w}" y1="${trackY}" x2="${x+w}" y2="${trackY+trackH}" stroke="rgba(240,242,247,0.7)" stroke-width="1.5"/>`;
-      if (s.type === 'break' && w > 60) tlBars += `<text x="${x+w/2}" y="${trackY+trackH/2+4}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="${ec.text}" opacity="0.8">break</text>`;
-      if (s.type !== 'break') {
-        let cx = (x + w / 2).toFixed(1), clipId = `elc${i}`;
-        tlClips += `<clipPath id="${clipId}"><rect x="${x}" y="0" width="${w}" height="${trackY}"/></clipPath>`;
-        tlLabels += `<g clip-path="url(#${clipId})"><text transform="translate(${cx},${trackY-4}) rotate(-90)" text-anchor="start" font-family="Outfit,sans-serif" font-size="10" fill="${ec.text}" opacity="0.88">${esc(s.name)}</text></g>`;
-        tlLabels += `<line x1="${cx}" y1="${trackY}" x2="${cx}" y2="${trackY+5}" stroke="${ec.text}" stroke-width="0.6" opacity="0.3"/>`;
+    let W=1268,trackY=100,trackH=38,scale=x=>((x/sessionMs)*W).toFixed(1);
+    let segs=[
+      ...projects.map(p=>({startMs:p.startMs,durationMs:p.durationMs,type:p.outcome,name:p.name})),
+      ...breaks.map(b=>({startMs:b.startMs,durationMs:b.durationMs,type:'break',name:'break'}))
+    ].sort((a,b)=>a.startMs-b.startMs);
+    let tlBars='',tlLabels='',tlClips='';
+    segs.forEach((s,i)=>{
+      let x=parseFloat(scale(s.startMs)),w=Math.max(parseFloat(scale(s.durationMs)),2);
+      let ec=EXPORT_COLORS[s.type]||EXPORT_COLORS['Continue Project'];
+      tlBars+=`<rect x="${x}" y="${trackY}" width="${w}" height="${trackH}" fill="${ec.fill}"/>`;
+      tlBars+=`<line x1="${x+w}" y1="${trackY}" x2="${x+w}" y2="${trackY+trackH}" stroke="rgba(240,242,247,0.7)" stroke-width="1.5"/>`;
+      if(s.type==='break'&&w>60) tlBars+=`<text x="${x+w/2}" y="${trackY+trackH/2+4}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="${ec.text}" opacity="0.8">break</text>`;
+      if(s.type!=='break'){
+        let cx=(x+w/2).toFixed(1),clipId=`elc${i}`;
+        tlClips+=`<clipPath id="${clipId}"><rect x="${x}" y="0" width="${w}" height="${trackY}"/></clipPath>`;
+        tlLabels+=`<g clip-path="url(#${clipId})"><text transform="translate(${cx},${trackY-4}) rotate(-90)" text-anchor="start" font-family="Outfit,sans-serif" font-size="10" fill="${ec.text}" opacity="0.88">${esc(s.name)}</text></g>`;
+        tlLabels+=`<line x1="${cx}" y1="${trackY}" x2="${cx}" y2="${trackY+5}" stroke="${ec.text}" stroke-width="0.6" opacity="0.3"/>`;
       }
     });
-    let tlTicks = '', tickMin = [5,10,15,20,30,60].find(t => parseFloat(scale(t * 60000)) > 80) || 60;
-    for (let t = tickMin; t * 60000 < sessionMs; t += tickMin) {
-      let x = parseFloat(scale(t * 60000)).toFixed(1), d = new Date(sessionStart + t * 60000);
-      let label = pad(d.getHours()) + ':' + pad(d.getMinutes());
-      tlTicks += `<line x1="${x}" y1="${trackY+trackH}" x2="${x}" y2="${trackY+trackH+7}" stroke="rgba(60,80,200,0.35)" stroke-width="0.8"/>`;
-      tlTicks += `<text x="${x}" y="${trackY+trackH+17}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(60,80,140,0.85)">${label}</text>`;
+    let tlTicks='',tickMin=[5,10,15,20,30,60].find(t=>parseFloat(scale(t*60000))>80)||60;
+    for(let t=tickMin;t*60000<sessionMs;t+=tickMin){
+      let x=parseFloat(scale(t*60000)).toFixed(1),d=new Date(sessionStart+t*60000),label=pad(d.getHours())+':'+pad(d.getMinutes());
+      tlTicks+=`<line x1="${x}" y1="${trackY+trackH}" x2="${x}" y2="${trackY+trackH+7}" stroke="rgba(60,80,200,0.35)" stroke-width="0.8"/>`;
+      tlTicks+=`<text x="${x}" y="${trackY+trackH+17}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(60,80,140,0.85)">${label}</text>`;
     }
-    let tlSvg = `<defs>${tlClips}</defs><path d="M6,${trackY} H${W-6} Q${W},${trackY} ${W},${trackY+6} V${trackY+trackH} H0 V${trackY+6} Q0,${trackY} 6,${trackY}" fill="rgba(220,224,237,0.9)"/>${tlBars}${tlTicks}${tlLabels}`;
+    let tlSvg=`<defs>${tlClips}</defs><path d="M6,${trackY} H${W-6} Q${W},${trackY} ${W},${trackY+6} V${trackY+trackH} H0 V${trackY+6} Q0,${trackY} 6,${trackY}" fill="rgba(220,224,237,0.9)"/>${tlBars}${tlTicks}${tlLabels}`;
 
-    // Project rows
-    let rows = projects.map(p => {
-      let ec = EXPORT_COLORS[p.outcome];
+    let rows=projects.map(p=>{
+      let ec=EXPORT_COLORS[p.outcome];
       return `<tr><td class="mono muted">${p.index}</td><td class="bold">${esc(p.name)}</td><td class="secondary">${esc(p.owner)}</td><td class="mono secondary">${p.startTime}</td><td class="mono">${fmtMM(p.durationMs)}</td><td><span class="badge" style="background:${ec.bg};color:${ec.text}">${p.outcome}</span></td><td class="secondary notes">${esc(p.notes).replace(/\n/g,'<br>')}</td></tr>`;
     }).join('');
 
-    // Owner cards
-    let ownerMap = {}, ownerList = [];
-    projects.forEach(p => {
-      if (!ownerMap[p.owner]) { ownerMap[p.owner] = { projects: [], totalMs: 0 }; OUTCOMES.forEach(o => ownerMap[p.owner][o] = 0); ownerList.push(p.owner); }
-      ownerMap[p.owner].projects.push(p); ownerMap[p.owner].totalMs += p.durationMs; ownerMap[p.owner][p.outcome]++;
+    let ownerMap={},ownerList=[];
+    projects.forEach(p=>{
+      if(!ownerMap[p.owner]){ownerMap[p.owner]={projects:[],totalMs:0};OUTCOMES.forEach(o=>ownerMap[p.owner][o]=0);ownerList.push(p.owner);}
+      ownerMap[p.owner].projects.push(p); ownerMap[p.owner].totalMs+=p.durationMs; ownerMap[p.owner][p.outcome]++;
     });
-    let ownerCards = ownerList.map((owner, oi) => {
-      let d = ownerMap[owner], color = OWNER_COLORS[oi % OWNER_COLORS.length];
-      let share = ((d.totalMs / sessionMs) * 100).toFixed(1);
-      let initials = owner.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2);
-      let pills = OUTCOMES.filter(o => d[o] > 0).map(o => { let ec = EXPORT_COLORS[o]; return `<span style="font-size:10px;font-family:'DM Mono',monospace;background:${ec.bg};color:${ec.text};border-radius:3px;padding:2px 7px;">${d[o]} ${o}</span>`; }).join('');
-      let projRows = d.projects.map(p => { let ec = EXPORT_COLORS[p.outcome]; return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(100,140,200,0.07);"><span style="font-family:'DM Mono',monospace;font-size:10px;color:#8890aa;min-width:36px;">${fmtMM(p.durationMs)}</span><span style="font-size:12px;color:#4a5680;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</span><span style="font-size:10px;font-family:'DM Mono',monospace;background:${ec.bg};color:${ec.text};border-radius:3px;padding:1px 6px;">${p.outcome}</span></div>`; }).join('');
-      return `<div style="background:#f5f6fa;border:1px solid rgba(60,80,140,0.12);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:${color}22;border:1px solid ${color}55;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:${color};flex-shrink:0;">${initials}</div><div><div style="font-size:13px;font-weight:500;color:#1a2035;">${esc(owner)}</div><div style="font-size:10px;color:#8890aa;font-family:'DM Mono',monospace;">${d.projects.length} projects · ${share}% of session</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;"><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${d.projects.length}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Projects</div></div><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${fmtMM(d.totalMs)}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Total</div></div><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${fmtMM(d.totalMs/d.projects.length)}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Avg</div></div></div><div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div><div><div style="font-size:9px;color:#8890aa;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;">Share of session</div><div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:5px;"><div style="height:3px;width:${share}%;background:${color};border-radius:2px;"></div></div></div><div style="border-top:1px solid rgba(100,140,200,0.08);padding-top:8px;"><div style="font-size:9px;color:#8890aa;font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:4px;">Projects</div>${projRows}</div></div>`;
+    let ownerCards=ownerList.map((owner,oi)=>{
+      let d=ownerMap[owner],color=OWNER_COLORS[oi%OWNER_COLORS.length];
+      let share=((d.totalMs/sessionMs)*100).toFixed(1),initials=owner.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+      let pills=OUTCOMES.filter(o=>d[o]>0).map(o=>{let ec=EXPORT_COLORS[o];return `<span style="font-size:10px;font-family:'DM Mono',monospace;background:${ec.bg};color:${ec.text};border-radius:3px;padding:2px 7px;">${d[o]} ${o}</span>`;}).join('');
+      let projRows=d.projects.map(p=>{let ec=EXPORT_COLORS[p.outcome];return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(100,140,200,0.07);"><span style="font-family:'DM Mono',monospace;font-size:10px;color:#8890aa;min-width:36px;">${fmtMM(p.durationMs)}</span><span style="font-size:12px;color:#4a5680;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</span><span style="font-size:10px;font-family:'DM Mono',monospace;background:${ec.bg};color:${ec.text};border-radius:3px;padding:1px 6px;">${p.outcome}</span></div>`;}).join('');
+      return `<div style="background:#f5f6fa;border:1px solid rgba(60,80,140,0.12);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:${color}22;border:1px solid ${color}55;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:${color};flex-shrink:0;">${initials}</div><div><div style="font-size:13px;font-weight:500;color:#1a2035;">${esc(owner)}</div><div style="font-size:10px;color:#8890aa;font-family:'DM Mono',monospace;">${d.projects.length} projects · ${share}% of session</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;"><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${d.projects.length}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Projects</div></div><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${fmtMM(d.totalMs)}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Total</div></div><div style="background:#eaecf4;border-radius:5px;padding:7px 8px;text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:${color};">${fmtMM(d.totalMs/d.projects.length)}</div><div style="font-size:9px;color:#8890aa;text-transform:uppercase;">Avg</div></div></div><div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div><div><div style="font-size:9px;color:#8890aa;font-family:'DM Mono',monospace;text-transform:uppercase;">Share of session</div><div style="height:3px;background:rgba(0,0,0,0.06);border-radius:2px;margin-top:5px;"><div style="height:3px;width:${share}%;background:${color};border-radius:2px;"></div></div></div><div style="border-top:1px solid rgba(100,140,200,0.08);padding-top:8px;"><div style="font-size:9px;color:#8890aa;font-family:'DM Mono',monospace;text-transform:uppercase;margin-bottom:4px;">Projects</div>${projRows}</div></div>`;
     }).join('');
 
-    let outcomeCards = OUTCOMES.map(o => { let ec = EXPORT_COLORS[o]; return `<div style="display:flex;align-items:center;gap:8px;background:${ec.bg};border:1px solid ${ec.border};border-radius:6px;padding:7px 12px;"><span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:${ec.text};min-width:22px">${counts[o]}</span><span style="font-size:12px;font-weight:500;color:${ec.text}">${o}</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:#8890aa;margin-left:auto">${avgFmt(o)} avg</span></div>`; }).join('');
+    let outcomeCards=OUTCOMES.map(o=>{let ec=EXPORT_COLORS[o];return `<div style="display:flex;align-items:center;gap:8px;background:${ec.bg};border:1px solid ${ec.border};border-radius:6px;padding:7px 12px;"><span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:${ec.text};min-width:22px">${counts[o]}</span><span style="font-size:12px;font-weight:500;color:${ec.text}">${o}</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:#8890aa;margin-left:auto">${avgFmt(o)} avg</span></div>`;}).join('');
 
-    let html = `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Concept Review — ${esc(stage)} ${esc(season)}</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{--bg0:#f0f2f7;--bg1:#fff;--bg2:#f5f6fa;--bg3:#eaecf4;--border:rgba(60,80,140,0.12);--text-primary:#1a2035;--text-secondary:#4a5680;--text-muted:#8890aa;--accent:#0284c7;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Outfit',sans-serif;background:var(--bg0);color:var(--text-primary);font-size:14px;line-height:1.5;padding:32px;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(56,189,248,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
-.wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;}
-h1{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;}
-.subtitle{display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;}
-.sub-item{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);}
-.sub-item span{color:var(--text-secondary);}
-.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
-.stat{background:var(--bg1);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}
-.stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;font-family:'DM Mono',monospace;margin-bottom:5px;}
-.stat-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;}
-.stat-value.ac{color:var(--accent);}.stat-value.gr{color:#16a34a;}
-.card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;}
-.card-title{font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
-.outcome-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
-.tl-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);font-family:'DM Mono',monospace;}
-.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
-th{text-align:left;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);padding:0 8px 10px 0;border-bottom:1px solid var(--border);font-weight:400;}
-td{padding:9px 8px 9px 0;border-bottom:1px solid var(--border);vertical-align:top;}
-tr:last-child td{border-bottom:none;}
-.mono{font-family:'DM Mono',monospace;}.muted{color:var(--text-muted);}.secondary{color:var(--text-secondary);}.bold{font-weight:500;}
-.notes{font-size:12px;white-space:pre-wrap;line-height:1.5;}
-.badge{display:inline-block;font-size:10px;font-weight:500;font-family:'DM Mono',monospace;border-radius:4px;padding:2px 8px;letter-spacing:0.04em;text-transform:uppercase;}
-</style></head>
-<body><div class="wrap">
-<h1>Concept Review</h1>
-<div class="subtitle">
-  <div class="sub-item">Stage <span>${esc(stage)}</span></div>
-  <div class="sub-item">Season <span>${esc(season)}</span></div>
-  <div class="sub-item">${dateStr}</div>
-  <div class="sub-item">Generated <span>${timeStr}</span></div>
-</div>
-<hr class="divider">
-<div class="stats">
-  <div class="stat"><div class="stat-label">Session elapsed</div><div class="stat-value ac">${elapsed}</div></div>
-  <div class="stat"><div class="stat-label">Projects reviewed</div><div class="stat-value">${projects.length}</div></div>
-  <div class="stat"><div class="stat-label">Avg time / project</div><div class="stat-value gr">${avgAll}</div></div>
-  <div class="stat"><div class="stat-label">Break time</div><div class="stat-value">${fmtMM(bTotal)}</div></div>
-</div>
-<div class="card">
-  <div class="card-title">Session timeline</div>
-  <div style="width:100%;overflow-x:auto;">
-    <svg viewBox="0 0 1268 170" height="170" style="min-width:600px;width:100%;">${tlSvg}</svg>
-  </div>
-  <div class="tl-legend">
-    <div class="legend-item"><div class="legend-dot" style="background:rgba(74,222,128,0.35);border:1px solid rgba(74,222,128,0.5)"></div>Continue Project</div>
-    <div class="legend-item"><div class="legend-dot" style="background:rgba(248,113,113,0.35);border:1px solid rgba(248,113,113,0.5)"></div>Cancel Project</div>
-    <div class="legend-item"><div class="legend-dot" style="background:rgba(167,139,250,0.35);border:1px solid rgba(167,139,250,0.5)"></div>Vision Agreed Approval</div>
-    <div class="legend-item"><div class="legend-dot" style="background:rgba(251,191,36,0.28);border:1px solid rgba(251,191,36,0.45)"></div>Break</div>
-  </div>
-  <div class="outcome-row">${outcomeCards}</div>
-</div>
-<div class="card">
-  <div class="card-title">Logged projects</div>
-  <table><thead><tr>
-    <th style="width:3%">#</th><th style="width:18%">Project</th><th style="width:12%">Owner</th>
-    <th style="width:7%">Start</th><th style="width:7%">Duration</th><th style="width:14%">Outcome</th><th>Notes</th>
-  </tr></thead><tbody>${rows}</tbody></table>
-</div>
-<div class="card">
-  <div class="card-title">Owner summary</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">${ownerCards}</div>
-</div>
-</div></body></html>`;
+    let html=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Concept Review Minutes — ${esc(stage)} ${esc(season)}</title><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"><style>:root{--bg0:#f0f2f7;--bg1:#fff;--bg2:#f5f6fa;--bg3:#eaecf4;--border:rgba(60,80,140,0.12);--text-primary:#1a2035;--text-secondary:#4a5680;--text-muted:#8890aa;--accent:#0284c7;}*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Outfit',sans-serif;background:var(--bg0);color:var(--text-primary);font-size:14px;line-height:1.5;padding:32px;}body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(56,189,248,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}.wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;}h1{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;}.subtitle{display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;}.sub-item{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);}.sub-item span{color:var(--text-secondary);}.divider{border:none;border-top:1px solid var(--border);margin:18px 0;}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}.stat{background:var(--bg1);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}.stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;font-family:'DM Mono',monospace;margin-bottom:5px;}.stat-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;}.stat-value.ac{color:var(--accent);}.stat-value.gr{color:#16a34a;}.card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;}.card-title{font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}.outcome-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}.tl-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);font-family:'DM Mono',monospace;}.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}th{text-align:left;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);padding:0 8px 10px 0;border-bottom:1px solid var(--border);font-weight:400;}td{padding:9px 8px 9px 0;border-bottom:1px solid var(--border);vertical-align:top;}tr:last-child td{border-bottom:none;}.mono{font-family:'DM Mono',monospace;}.muted{color:var(--text-muted);}.secondary{color:var(--text-secondary);}.bold{font-weight:500;}.notes{font-size:12px;white-space:pre-wrap;line-height:1.5;}.badge{display:inline-block;font-size:10px;font-weight:500;font-family:'DM Mono',monospace;border-radius:4px;padding:2px 8px;letter-spacing:0.04em;text-transform:uppercase;}</style></head><body><div class="wrap"><h1>Concept Review Minutes</h1><div class="subtitle"><div class="sub-item">Stage <span>${esc(stage)}</span></div><div class="sub-item">Season <span>${esc(season)}</span></div><div class="sub-item">${dateStr}</div><div class="sub-item">Generated <span>${timeStr}</span></div></div><hr class="divider"><div class="stats"><div class="stat"><div class="stat-label">Session elapsed</div><div class="stat-value ac">${elapsed}</div></div><div class="stat"><div class="stat-label">Projects reviewed</div><div class="stat-value">${projects.length}</div></div><div class="stat"><div class="stat-label">Avg time / project</div><div class="stat-value gr">${avgAll}</div></div><div class="stat"><div class="stat-label">Break time</div><div class="stat-value">${fmtMM(bTotal)}</div></div></div><div class="card"><div class="card-title">Session timeline</div><div style="width:100%;overflow-x:auto;"><svg viewBox="0 0 1268 170" height="170" style="min-width:600px;width:100%;">${tlSvg}</svg></div><div class="tl-legend"><div class="legend-item"><div class="legend-dot" style="background:rgba(74,222,128,0.35);border:1px solid rgba(74,222,128,0.5)"></div>Continue Project</div><div class="legend-item"><div class="legend-dot" style="background:rgba(248,113,113,0.35);border:1px solid rgba(248,113,113,0.5)"></div>Cancel Project</div><div class="legend-item"><div class="legend-dot" style="background:rgba(167,139,250,0.35);border:1px solid rgba(167,139,250,0.5)"></div>Vision Agreed Approval</div><div class="legend-item"><div class="legend-dot" style="background:rgba(251,191,36,0.28);border:1px solid rgba(251,191,36,0.45)"></div>Break</div></div><div class="outcome-row">${outcomeCards}</div></div><div class="card"><div class="card-title">Logged projects</div><table><thead><tr><th style="width:3%">#</th><th style="width:18%">Project</th><th style="width:12%">Owner</th><th style="width:7%">Start</th><th style="width:7%">Duration</th><th style="width:14%">Outcome</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table></div><div class="card"><div class="card-title">Owner summary</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">${ownerCards}</div></div></div></body></html>`;
 
-    let blob = new Blob([html], { type: 'text/html' });
-    let a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `concept_review_${stage.toLowerCase()}_${season.toLowerCase()}_${now.toISOString().slice(0,10)}.html`;
+    let blob=new Blob([html],{type:'text/html'});
+    let a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`concept_review_minutes_${stage.toLowerCase()}_${season.toLowerCase()}_${now.toISOString().slice(0,10)}.html`;
     a.click();
   }
 </script>
